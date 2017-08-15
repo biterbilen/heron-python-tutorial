@@ -317,9 +317,10 @@ $ ./pants binary src/python/word-count-topology
 
 __Note:__ First time invocation of pants binary might instantiate a bootstrap process if pants has not been setup on the machine before. 
 
+```shell
 $ heron submit local \
   ./dist/word-count-topology.pex \
-  \- \
+  - \
   Word_Count_Topology \
   --deploy-deactivated
 ```
