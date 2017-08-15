@@ -8,13 +8,13 @@ tags:
 - heron topology example
 ---
 
-# Create an Heron topology in Python
+# Create a Heron topology in Python
 
 Here we create a Heron topology that implements a word-count application. We will use pants to build and package the project.
 
 ## Prerequisites
 
-* [Python 2.7](https://www.python.org/download/releases/2.7/) The python language and interpreter. **Note:**  Currently heron does not support python 3
+* [Python 2.7](https://www.python.org/download/releases/2.7/) The python language and interpreter. **Note:**  Currently, Heron does not support python 3, yet
 
 * [Pip](https://pip.pypa.io/en/stable/installing/) The python 2 package manager.
 
@@ -31,7 +31,7 @@ From the command line, use the following git command to clone this project
 git clone https://github.com/streamlio/heron-python-tutorial.git
 ```
 
-This command creates a directory named `heron-python-tutorial` at the current location, which contains a basic heron python project.
+This command creates a directory named `heron-python-tutorial` at the current location, which contains a basic Heron python project.
 The `heron-python-tutorial` directory contains the following items:
 
 * `3rdparty`: Contains the reference links to 3rd party python libraries.
@@ -45,13 +45,13 @@ The `heron-python-tutorial` directory contains the following items:
 
 ### 3rd party dependencies
 
-3rd party libraries which are referenced in the main project are put under the folder `3rdparty/python` with a `BUILD` file specifying the type of libraries 
+3rd party libraries that are referenced in the main project are put under the folder `3rdparty/python` with a `BUILD` file specifying the type of libraries 
 
 ```bash
 python_requirements()
 ```
 
-and a `requirements.txt` file specifying the external libraries in our case `heronpy` and `six` with there respective target version numbers
+and a `requirements.txt` file specifying the external libraries in our case `heronpy` and `six` with their respective target version numbers
 
 ```bash
 heronpy==0.15.0
@@ -79,13 +79,9 @@ python_binary(
 )
 ```
 
-In the example above the python libraries bundles all the custom defined spouts and bolts in a local package called spouts-bolts-py excluding the
-`word_count_topology.py` which is the bootstrap code and the topology builder.
+In the example above, the python libraries bundle all the custom defined spouts and bolts in a local package called spouts-bolts-py excluding the `word_count_topology.py` which contains the bootstrap code and the topology builder.
 
-The `python_binary` builds the bundle with an entry point, we provide a name and source of the entry point and the dependencies, in our case the
-generated `spouts-bolts-py` bundle and the 3rd party dependencies
-
-
+The `python_binary` builds the bundle with an entry point, we provide a name and a source of the entry point and the dependencies, in our case the generated `spouts-bolts-py` bundle and the 3rd party dependencies
 
 ### Pants python details
 
@@ -294,8 +290,8 @@ if __name__ == '__main__':
         constants.TOPOLOGY_TICK_TUPLE_FREQ_SECS: emit_frequency
     }
 
-    # Define the word count bolt with the input context defined above and a parallelism hint and emit frequency config
-    # and
+    # Define the word count bolt with the input context defined above, a parallelism hint, and
+    # emit frequency config
     word_count_bolt = builder.add_bolt("word_count_bolt", WordCountBolt, par=2,
                                        inputs=word_count_bolt_inputs, config=config)
 
@@ -306,12 +302,12 @@ if __name__ == '__main__':
 
 ### logging
 
-Heron python spouts and bolts have an attribute log which can be accessed by `self.log()` inside classes extending from `Bolt` or `Spout` base classes for logging purposes.
+Heron python spouts and bolts have an attribute log which can be accessed by `self.log()` inside classes that are extending from `Bolt` or `Spout` base classes.
 
 
 ## Test on the cluster
 
-In order to test our topology, we need to build a [.pex](https://pex.readthedocs.io/en/stable/whatispex.html) archive which is a python package format, that we can deploy that on a running Heron cluster. For our example we'll assume that you've set up a single-node Heron cluster running locally. Follow [this simple tutorial](https://twitter.github.io/heron/docs/getting-started/) to get a Heron cluster running in just a few commands.
+In order to test our topology, we need to build a [.pex](https://pex.readthedocs.io/en/stable/whatispex.html) archive which is a python package format, that we can deploy that on a running Heron cluster. For our example, we'll assume that you've set up a single-node Heron cluster running locally. Follow [this simple tutorial](https://twitter.github.io/heron/docs/getting-started/) to get a Heron cluster running in just a few commands.
 
 Once the cluster is up and running, you can package the topology using the configuration that's already in `pom.xml` and then submit the topology to the Heron cluster:
 
@@ -323,7 +319,7 @@ __Note:__ First time invocation of pants binary might instantiate a bootstrap pr
 
 $ heron submit local \
   ./dist/word-count-topology.pex \
-  - \
+  \- \
   Word_Count_Topology \
   --deploy-deactivated
 ```
@@ -333,7 +329,7 @@ $ heron submit local \
 There was a lot going on in that last command. We'll break it down a bit here:
 
 ```shell
-$ ./pants binary src/python/word-count-topology # This will build the pex with all the python its dependencies bundled
+$ ./pants binary src/python/word-count-topology # Builds the pex with all the python dependencies
 
 $ heron submit local \ # Submit to the local cluster
   ./dist/word-count-topology.pex \ # The path of the topology's pex file
@@ -344,7 +340,7 @@ $ heron submit local \ # Submit to the local cluster
 
 ### Activating the topology
 
-At this point, the topology has been *submitted* to the Heron cluster but not yet *activated*. That essentially means that Heron has your application code and knows how to run it but hasn't actually started any processes yet. To __activate or run__ the topology:
+At this point, the topology has been *submitted* to the Heron cluster but not yet *activated*. That essentially means that Heron has your application code but the topology has not started to process data. To __activate or run__ the topology:
 
 ```shell
 $ heron activate local Word_Count_Topology
